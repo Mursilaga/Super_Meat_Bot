@@ -13,62 +13,33 @@ import time
 #  exit()
 
 
-def exitNice(signum, frame):
-  global running
-  running = False
+class MeatBot:
+    def __init__(self):
+        self.running = False
+        self.time_stamp = datetime.now()
+
+    def exitNice(self, signum, frame):
+        self.running = False
 
 
-def run_left(sec):
-    pyautogui.keyDown('shift')
-    pyautogui.keyDown('left')
-    time.sleep(sec)
-    pyautogui.keyUp('shift')
-    pyautogui.keyUp('left')
+    def keyEvent(self, e):
+        print("Key " + e.event_type + ": " + str(e.name))
+        now = datetime.now()
+        print(now - self.time_stamp)
+        self.time_stamp = now
+
+        #if e.name == "q":
+        #    exitNice("", "")
+        #    print("Quitting")
 
 
-def run_right(sec):
-    pyautogui.keyDown('shift')
-    pyautogui.keyDown('right')
-    time.sleep(sec)
-    pyautogui.keyUp('shift')
-    pyautogui.keyUp('right')
+    def run(self):
+        self.time_stamp = datetime.now()
+        self.running = True
+        signal.signal(signal.SIGINT, self.exitNice)
+        keyboard.hook(self.keyEvent)
+        while self.running:
+            time.sleep(1)
 
 
-def go_left(sec):
-    pyautogui.keyDown('left')
-    time.sleep(sec)
-    pyautogui.keyUp('left')
-
-
-def go_right(sec):
-    pyautogui.keyDown('right')
-    time.sleep(sec)
-    pyautogui.keyUp('right')
-
-
-def jump(sec):
-    pyautogui.keyDown('space')
-    time.sleep(sec)
-    pyautogui.keyUp('space')
-
-def keyEvent(e):
-    global running
-    global time_stamp
-    print("Key " + e.event_type + ": " + str(e.name))
-    now = datetime.now()
-    print(now - time_stamp)
-    time_stamp = now
-
-    #if e.name == "q":
-    #    exitNice("", "")
-    #    print("Quitting")
-
-
-time_stamp = datetime.now()
-running = True
-signal.signal(signal.SIGINT, exitNice)
-keyboard.hook(keyEvent)
-
-
-while running:
-    time.sleep(1)
+MeatBot().run()

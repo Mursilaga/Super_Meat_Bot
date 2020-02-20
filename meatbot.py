@@ -29,8 +29,22 @@ class MeatBot:
         self.running = False
 
     def keyEvent(self, e):
-        if e.name == "enter" and e.event_type == "down":
-            self.runRoutine()
+        if e.name == "f1":
+            if e.event_type == "down":
+                self.runRoutine()
+            return
+
+        if e.name == "f2":
+            if e.event_type == "down":
+                print("routine clear")
+                self.routine.clear()
+            return
+
+        if e.name == "f3":
+            if e.event_type == "down":
+                print("print routine")
+                for a in self.routine:
+                    print(a.type + " : " + a.value)
             return
 
         now = datetime.now()
@@ -41,9 +55,7 @@ class MeatBot:
         self.routine.append(Action(e.event_type, str(e.name)))
         print(e.event_type + ": " + str(e.name))
 
-        if e.name == "a" and e.event_type == "up":
-            for a in self.routine:
-                print(a.type + " : " + a.value)
+
 
 
 
@@ -52,13 +64,16 @@ class MeatBot:
         #     print("Quitting")
 
     def runRoutine(self):
+        print("runRoutine")
         for act in self.routine:
+            print("bot " + act.type + ":" + act.value)
             if act.type == 'wait':
                 time.sleep(float(act.value))
             elif act.type == 'down':
                 pyautogui.keyDown(act.value)
             elif act.type == 'up':
                 pyautogui.keyUp(act.value)
+
 
 
     def run(self):
